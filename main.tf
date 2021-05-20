@@ -41,7 +41,7 @@ resource "aws_s3_bucket" "client" {
 
   bucket    = "${each.key}.${var.name}.${var.domain}"
   acl       = "public-read"
-  policy    = templatefile("policies/s3-public-read.json", {
+  policy    = templatefile("${path.module}/policies/s3-public-read.json", {
     bucket  = "${each.key}.${var.name}.${var.domain}"
   })
 
@@ -155,7 +155,7 @@ resource "aws_iam_user_policy" "pipeline" {
   for_each  = toset(var.environments)
 
   user      = aws_iam_user.pipeline[each.key].name
-  policy    = templatefile("policies/s3-full-access-and-cloudfront-invalidation.json", {
+  policy    = templatefile("${path.module}/policies/s3-full-access-and-cloudfront-invalidation.json", {
     bucket_arn      = aws_s3_bucket.client[each.key].arn
     cloudfront_arn  = aws_cloudfront_distribution.cdn[each.key].arn
   })
