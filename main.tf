@@ -45,6 +45,12 @@ resource "aws_s3_bucket" "client" {
     bucket  = "${each.key}.${var.name}.${var.domain}"
   })
 
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["HEAD", "GET", "PUT", "POST"]
+    allowed_origins = ["https://${each.key}.${var.name}.${var.domain}"]
+  }
+
   website {
     index_document  = "index.html"
     error_document  = "index.html"
